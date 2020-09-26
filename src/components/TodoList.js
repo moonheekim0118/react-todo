@@ -29,19 +29,22 @@ const TodoList =()=>{
     const todoStateHanlder=(e)=>{ // 투두 체크 핸들러 
         // 선택된 투두의 key값을 이용하여 done 을 바꾸어준다.
         const key=e.target.id;
-        const value=e.target.value;
         setList((prevList)=>{
             const modifiedList=[...prevList];
             const idx= modifiedList.findIndex(x=>x.key===key);
             if(idx>=0){
-                modifiedList[idx].done=true;
+                modifiedList[idx].done=!modifiedList[idx].done;
             }
             return modifiedList;
         })
     }
 
     const todoRemoveHandler=(e)=>{ // 투두 삭제 핸들러 
-
+        const key = e.target.id;
+        setList((prevList)=>{
+            const modifiedList=prevList.filter((v)=>v.key!==key);
+            return modifiedList;
+        })
     }
     const value = useMemo(() => ({addNewTodoHandler, todoStateHanlder, todoRemoveHandler}), []); // memo로 캐싱해주기 
     return(

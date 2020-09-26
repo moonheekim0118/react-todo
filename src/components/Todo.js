@@ -8,7 +8,7 @@ const Todo =({children, id})=>{
         <div>
             {children}
             <input type="checkbox" id={id} name="check" onChange={todoStateHanlder} value={children} />
-            <button onClick={todoRemoveHandler}>X</button>
+            <button id={id} onClick={todoRemoveHandler}>X</button>
         </div>
     );
 }
