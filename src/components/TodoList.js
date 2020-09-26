@@ -1,4 +1,4 @@
-import React, {useState, createContext, useMemo, memo, useEffect} from 'react';
+import React, {useState, createContext, useMemo, memo} from 'react';
 import Form from './Form';
 import Todo from './Todo';
 import styled from 'styled-components';
@@ -37,6 +37,7 @@ const TodoList =()=>{
 
     const todoStateHanlder=(e)=>{ // 투두 체크 핸들러 
         // 선택된 투두의 key값을 이용하여 done 을 바꾸어준다.
+        console.log(e);
         const key=e.target.id;
         setList((prevList)=>{
             const modifiedList=[...prevList];
@@ -57,6 +58,7 @@ const TodoList =()=>{
     }
     const value = useMemo(() => ({addNewTodoHandler, todoStateHanlder, todoRemoveHandler}), []); // memo로 캐싱해주기 
     return(
+
         <StyleTodo>
         <ToDoContext.Provider value={value}>
             <Form/>
