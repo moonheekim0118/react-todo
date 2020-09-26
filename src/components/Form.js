@@ -1,7 +1,7 @@
 import React ,{useContext, memo} from 'react';
 import {ToDoContext} from './TodoList';
 
-const Form =memo(()=>{
+const Form =()=>{
     const {addNewTodoHandler} = useContext(ToDoContext);
     return(
         <>
@@ -11,6 +11,6 @@ const Form =memo(()=>{
             </form>
         </>
     );
-});
+};
 
-export default Form;
+export default memo(Form);
