@@ -60,7 +60,7 @@ const TodoList =()=>{
         <StyleTodo>
         <ToDoContext.Provider value={value}>
             <Form/>
-            {list.map((v,i)=><Todo key={v.key} id={v.key}>{v.contents}</Todo>)}
+            {list.map((v,i)=><Todo key={v.key} id={v.key} content={v.contents} done={v.done.toString()}/>)}
         </ToDoContext.Provider>
         </StyleTodo>
     );

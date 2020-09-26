@@ -13,6 +13,11 @@ const StyleList=styled.div`
     }
 `
 
+const StyleSpan=styled.span
+`
+    text-decoration:${props=> props.alt==="false" ? 'none':'line-through'}
+`;
+
 const StyleCheckbox=styled.input`
     cursor:pointer;
 `
@@ -32,15 +37,18 @@ const StyleBtn= styled.button`
     }
 `
 
-const Todo =({children, id})=>{
+const Todo =(props)=>{
     const { todoStateHanlder , todoRemoveHandler } = useContext(ToDoContext);
 
+    console.log(props);
     return(
         <StyleList>
-            {children}
+            <StyleSpan alt={props.done}>
+                {props.content}
+            </StyleSpan>
            <div>
-                <StyleCheckbox type="checkbox" id={id} name="check" onChange={todoStateHanlder} value={children} />
-                <StyleBtn id={id} onClick={todoRemoveHandler}>X</StyleBtn>
+                <StyleCheckbox type="checkbox" id={props.id} name="check" onChange={todoStateHanlder} value={props.content} />
+                <StyleBtn id={props.id} onClick={todoRemoveHandler}>X</StyleBtn>
            </div>
         </StyleList>
     );
