@@ -1,6 +1,14 @@
 import React, {useState, createContext, useMemo, memo, useEffect} from 'react';
 import Form from './Form';
 import Todo from './Todo';
+import styled from 'styled-components';
+
+const StyleTodo= styled.div`
+    background:#ccff99;
+    padding: 20px;
+    border-radius:5px;
+    width:100%;
+`
 
 export const ToDoContext = createContext({
     addNewTodoHandler:()=>{},
@@ -19,6 +27,7 @@ const TodoList =()=>{
     const addNewTodoHandler=(e)=>{ // 새로운 투두 등록하기 핸들러 
         e.preventDefault();
         const contents=e.target.todo.value;
+        if(contents.length===0) return;
         e.target.todo.value='';
         const newTodo={key:'',contents:contents,done:false};
         setList((prevList)=>{
@@ -48,10 +57,12 @@ const TodoList =()=>{
     }
     const value = useMemo(() => ({addNewTodoHandler, todoStateHanlder, todoRemoveHandler}), []); // memo로 캐싱해주기 
     return(
+        <StyleTodo>
         <ToDoContext.Provider value={value}>
             <Form/>
             {list.map((v,i)=><Todo key={v.key} id={v.key}>{v.contents}</Todo>)}
         </ToDoContext.Provider>
+        </StyleTodo>
     );
 
 };
