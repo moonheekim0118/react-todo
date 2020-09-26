@@ -1,6 +1,7 @@
-import React, {useState, createContext, useMemo, memo} from 'react';
+import React, {useState, createContext, useRef,useMemo, memo} from 'react';
 import Form from './Form';
 import Todo from './Todo';
+import Palette from './Palette';
 import styled from 'styled-components';
 
 const StyleTodo= styled.div`
@@ -13,7 +14,8 @@ const StyleTodo= styled.div`
 export const ToDoContext = createContext({
     addNewTodoHandler:()=>{},
     todoStateHanlder:()=>{},
-    todoRemoveHandler:()=>{}
+    todoRemoveHandler:()=>{},
+    colorHanlder:()=>{}
 })
 
 const TodoList =()=>{
@@ -23,13 +25,14 @@ const TodoList =()=>{
     // state는 배열 속 객체형태 {contents:'dfdf', done:t/f}
 
     const [ list, setList ]=useState([]);
+    const color = useRef('black');
 
     const addNewTodoHandler=(e)=>{ // 새로운 투두 등록하기 핸들러 
         e.preventDefault();
         const contents=e.target.todo.value;
         if(contents.length===0) return;
         e.target.todo.value='';
-        const newTodo={key:'',contents:contents,done:false};
+        const newTodo={key:'',contents:contents,done:false,color:color.current};
         setList((prevList)=>{
             newTodo.key=contents+prevList.length;
             return [...prevList, newTodo]});
@@ -37,7 +40,6 @@ const TodoList =()=>{
 
     const todoStateHanlder=(e)=>{ // 투두 체크 핸들러 
         // 선택된 투두의 key값을 이용하여 done 을 바꾸어준다.
-        console.log(e);
         const key=e.target.id;
         setList((prevList)=>{
             const modifiedList=[...prevList];
@@ -49,6 +51,10 @@ const TodoList =()=>{
         })
     }
 
+    const colorHanlder=(e)=>{
+        color.current=e.target.id;
+    }
+
     const todoRemoveHandler=(e)=>{ // 투두 삭제 핸들러 
         const key = e.target.id;
         setList((prevList)=>{
@@ -56,14 +62,15 @@ const TodoList =()=>{
             return modifiedList;
         })
     }
-    const value = useMemo(() => ({addNewTodoHandler, todoStateHanlder, todoRemoveHandler}), []); // memo로 캐싱해주기 
+    const value = useMemo(() => ({addNewTodoHandler, todoStateHanlder, todoRemoveHandler, colorHanlder}), []); // memo로 캐싱해주기 
     return(
 
         <StyleTodo>
-        <ToDoContext.Provider value={value}>
-            <Form/>
-            {list.map((v,i)=><Todo key={v.key} id={v.key} content={v.contents} done={v.done.toString()}/>)}
-        </ToDoContext.Provider>
+            <ToDoContext.Provider value={value}>
+                <Palette/>
+                <Form/>
+                {list.map((v,i)=><Todo key={v.key} id={v.key} content={v.contents} done={v.done.toString()} color={v.color}/>)}
+            </ToDoContext.Provider>
         </StyleTodo>
     );
 

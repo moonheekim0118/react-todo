@@ -1,4 +1,4 @@
-import React, {useContext,memo} from 'react';
+import React, {useContext,memo , useEffect} from 'react';
 import {ToDoContext} from './TodoList';
 import styled from 'styled-components';
 
@@ -38,15 +38,19 @@ const StyleSpan=styled.span
 `
     text-decoration:${props=> props.alt==="false" ? 'none':'line-through'};
     margin-left:25px;
+    color:${props=>props.className};
 `;
 
 
 const Todo =(props)=>{
     const { todoStateHanlder , todoRemoveHandler } = useContext(ToDoContext);
+    useEffect(()=>{
+        console.log(props.color)
+    })
     return(
         <StyleList>
             <StyleBtn id={props.id} onClick={todoRemoveHandler}>X</StyleBtn>
-            <StyleSpan alt={props.done} id={props.id} name="check" onClick={todoStateHanlder} >
+            <StyleSpan alt={props.done} className={props.color} id={props.id} name="check" onClick={todoStateHanlder} >
                 {props.content}
             </StyleSpan>
             {props.done==='true' && <div>✓</div>}
