@@ -15,7 +15,8 @@ export const ToDoContext = createContext({
     addNewTodoHandler:()=>{},
     todoStateHanlder:()=>{},
     todoRemoveHandler:()=>{},
-    colorHanlder:()=>{}
+    colorHanlder:()=>{},
+    selectedColor:'black'
 })
 
 const TodoList =()=>{
@@ -25,14 +26,14 @@ const TodoList =()=>{
     // state는 배열 속 객체형태 {contents:'dfdf', done:t/f}
 
     const [ list, setList ]=useState([]);
-    const color = useRef('black');
+    const [color, setColor]=useState('black');
 
     const addNewTodoHandler=(e)=>{ // 새로운 투두 등록하기 핸들러 
         e.preventDefault();
         const contents=e.target.todo.value;
         if(contents.length===0) return;
         e.target.todo.value='';
-        const newTodo={key:'',contents:contents,done:false,color:color.current};
+        const newTodo={key:'',contents:contents,done:false,color:color};
         setList((prevList)=>{
             newTodo.key=contents+prevList.length;
             return [...prevList, newTodo]});
@@ -52,7 +53,7 @@ const TodoList =()=>{
     }
 
     const colorHanlder=(e)=>{
-        color.current=e.target.id;
+        setColor(e.target.id);
     }
 
     const todoRemoveHandler=(e)=>{ // 투두 삭제 핸들러 
@@ -62,7 +63,7 @@ const TodoList =()=>{
             return modifiedList;
         })
     }
-    const value = useMemo(() => ({addNewTodoHandler, todoStateHanlder, todoRemoveHandler, colorHanlder}), []); // memo로 캐싱해주기 
+    const value = useMemo(() => ({addNewTodoHandler, todoStateHanlder, todoRemoveHandler, colorHanlder,selectedColor:color}), [color]); // memo로 캐싱해주기 
     return(
 
         <StyleTodo>
