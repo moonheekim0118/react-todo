@@ -1,4 +1,4 @@
-import React, {useContext,memo } from 'react';
+import React, {useContext,memo, useCallback } from 'react';
 import {ToDoContext} from './TodoList';
 import styled from 'styled-components';
 import { REMOVE, CHANGE_DONE } from '../action/actionTypes';
@@ -47,14 +47,15 @@ const StyleSpan=styled.span
 const Todo =(props)=>{
     const { dispatch } = useContext(ToDoContext);
 
-    const removeHandler=(e)=>{
+    const removeHandler=useCallback((e)=>{
         const key =  e.target.id;
         dispatch({type:REMOVE, value: key});
-    }
-    const doneCheckHandler=(e)=>{
+    });
+    
+    const doneCheckHandler=useCallback((e)=>{
         const key =  e.target.id;
         dispatch({type:CHANGE_DONE, value:key})
-    }
+    })
     return(
         <StyleList>
             <StyleBtn id={props.id} onClick={removeHandler}>X</StyleBtn>

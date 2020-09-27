@@ -1,4 +1,4 @@
-import React , {useContext,memo}from 'react';
+import React , {useContext,memo, useCallback}from 'react';
 import styled from 'styled-components';
 import {ToDoContext, ColorContext} from './TodoList';
 import { CHANGE_COLOR } from '../action/actionTypes';
@@ -28,9 +28,9 @@ const Color =({color})=>{
     const { dispatch } = useContext(ToDoContext);
     const { selectedColor } = useContext(ColorContext);
 
-    const colorHanlder=(e)=>{
+    const colorHanlder=useCallback((e)=>{
         dispatch({type:CHANGE_COLOR, value:e.target.id});
-    }
+    });
 
     return(
         <StyleColorBox alt={color} id={color} className={selectedColor===color ? 'active': ''} onClick={colorHanlder}/>

@@ -36,12 +36,14 @@ const StyleBtn = styled.button`
 
 const Form =()=>{
     const {dispatch} = useContext(ToDoContext);
-    const addNewTodoHandler=(e)=>{
+
+    const addNewTodoHandler=useCallback((e)=>{
         e.preventDefault();
         const contents=e.target.todo.value;
         e.target.todo.value='';
         dispatch({type:ADD,value:contents});
-    }
+    });
+
     return(
         <>
             <StyleForm onSubmit={addNewTodoHandler}>
