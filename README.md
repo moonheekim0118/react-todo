@@ -19,7 +19,7 @@
 
 
 
-
+<br/>
 
 
 ### 컴포넌트 구조
@@ -31,7 +31,7 @@
 
 
 
-
+<br/>
 ### Action Types
 
 ---
@@ -43,9 +43,11 @@
 
 
 
-
+<br/>
 
 ### Trouble Shooting
+
+---
 
 - 처음에는 ToDoList의 state Color를 useRef로 구현하여, Color 변경에도 리렌더링이 되지 않도록 했으나, Color 변경에 따라서 해당 Color 컴포넌트 CSS의 변화를 줘야 했으므로 Color를 state로 등록함
 
