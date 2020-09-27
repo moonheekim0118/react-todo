@@ -1,4 +1,4 @@
-import React, {useContext,memo , useEffect} from 'react';
+import React, {useContext,memo } from 'react';
 import {ToDoContext} from './TodoList';
 import styled from 'styled-components';
 import { REMOVE, CHANGE_DONE } from '../action/actionTypes';

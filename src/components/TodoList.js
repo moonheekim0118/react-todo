@@ -1,4 +1,4 @@
-import React, {useState, createContext,useReducer ,useMemo, memo} from 'react';
+import React, { createContext,useReducer ,useMemo, memo} from 'react';
 import Form from './Form';
 import Todo from './Todo';
 import Palette from './Palette';
@@ -6,12 +6,7 @@ import styled from 'styled-components';
 import * as type from '../action/actionTypes';
 
 const initalState={
-    list:[{
-        key:'',
-        contents:'',
-        done:false,
-        color:'black'
-    }],
+    list:[],
     color:'black'
 };
 
@@ -91,6 +86,10 @@ export const ToDoContext = createContext({
     selectedColor:'black'
 })
 
+export const ColorContext=createContext({
+    selectedColor:'black'
+})
+
 const TodoList =()=>{
 
     // state로 배열을 가진다.
@@ -100,14 +99,17 @@ const TodoList =()=>{
     const [state, dispatch]= useReducer(reducer,initalState);
     const {list, color}=state;
 
-    const value = useMemo(() => ({dispatch,selectedColor:color}), [color]); // memo로 캐싱해주기 
+    const value = useMemo(() => ({dispatch}), []); // memo로 캐싱해주기 
+    const value2 = useMemo(()=>({selectedColor:color}),[color]);
     return(
 
         <StyleTodo>
             <ToDoContext.Provider value={value}>
-                <Palette/>
+                <ColorContext.Provider value={value2}>
+                    <Palette/>
+                </ColorContext.Provider> 
                 <Form/>
-                {list.map((v,i)=><Todo key={v.key} id={v.key} content={v.contents} done={v.done.toString()} color={v.color}/>)}
+                {list && list.map((v,i)=><Todo key={v.key} id={v.key} content={v.contents} done={v.done.toString()} color={v.color}/>)}
             </ToDoContext.Provider>
         </StyleTodo>
     );
