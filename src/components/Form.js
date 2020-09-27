@@ -1,7 +1,7 @@
 import React ,{useContext, memo, useEffect} from 'react';
 import {ToDoContext} from './TodoList';
 import styled from 'styled-components';
-
+import { ADD } from '../action/actionTypes';
 
 const StyleForm= styled.form`
    display:flex;
@@ -35,7 +35,13 @@ const StyleBtn = styled.button`
 
 
 const Form =()=>{
-    const {addNewTodoHandler} = useContext(ToDoContext);
+    const {dispatch} = useContext(ToDoContext);
+    const addNewTodoHandler=(e)=>{
+        e.preventDefault();
+        const contents=e.target.todo.value;
+        e.target.todo.value='';
+        dispatch({type:ADD,value:contents});
+    }
     return(
         <>
             <StyleForm onSubmit={addNewTodoHandler}>

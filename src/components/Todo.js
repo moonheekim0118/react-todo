@@ -1,6 +1,8 @@
 import React, {useContext,memo , useEffect} from 'react';
 import {ToDoContext} from './TodoList';
 import styled from 'styled-components';
+import { REMOVE, CHANGE_DONE } from '../action/actionTypes';
+
 
 const StyleBtn= styled.button`
     font-size:5px;
@@ -43,14 +45,20 @@ const StyleSpan=styled.span
 
 
 const Todo =(props)=>{
-    const { todoStateHanlder , todoRemoveHandler } = useContext(ToDoContext);
-    useEffect(()=>{
-        console.log(props.color)
-    })
+    const { dispatch } = useContext(ToDoContext);
+
+    const removeHandler=(e)=>{
+        const key =  e.target.id;
+        dispatch({type:REMOVE, value: key});
+    }
+    const doneCheckHandler=(e)=>{
+        const key =  e.target.id;
+        dispatch({type:CHANGE_DONE, value:key})
+    }
     return(
         <StyleList>
-            <StyleBtn id={props.id} onClick={todoRemoveHandler}>X</StyleBtn>
-            <StyleSpan alt={props.done} className={props.color} id={props.id} name="check" onClick={todoStateHanlder} >
+            <StyleBtn id={props.id} onClick={removeHandler}>X</StyleBtn>
+            <StyleSpan alt={props.done} className={props.color} id={props.id} name="check" onClick={doneCheckHandler} >
                 {props.content}
             </StyleSpan>
             {props.done==='true' && <div>✓</div>}

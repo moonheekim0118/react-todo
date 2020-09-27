@@ -1,8 +1,83 @@
-import React, {useState, createContext, useRef,useMemo, memo} from 'react';
+import React, {useState, createContext,useReducer ,useMemo, memo} from 'react';
 import Form from './Form';
 import Todo from './Todo';
 import Palette from './Palette';
 import styled from 'styled-components';
+import * as type from '../action/actionTypes';
+
+const initalState={
+    list:[{
+        key:'',
+        contents:'',
+        done:false,
+        color:'black'
+    }],
+    color:'black'
+};
+
+const addNewTodoHandler=(contents,length,color)=>{ // 새로운 투두 등록하기 핸들러 
+    if(contents.length===0) return;
+    const newTodo={key:contents+length,contents:contents,done:false,color:color};
+    return newTodo;
+}
+
+
+
+const todoRemoveHandler=(key,list)=>{ // 투두 삭제 핸들러 
+    const modifiedList=list.filter((v)=>v.key!==key);
+    return modifiedList;
+}
+
+const todoStateHanlder=(key,list)=>{ // 투두 체크 핸들러 
+    // 선택된 투두의 key값을 이용하여 done 을 바꾸어준다.
+    const modifiedList=[...list];
+    const idx= modifiedList.findIndex(x=>x.key===key);
+    if(idx>=0){
+        modifiedList[idx].done=!modifiedList[idx].done;
+    }
+    return modifiedList;
+}
+
+
+
+const reducer =(state,action)=>{
+    const {list, color}=state;
+    switch(action.type){
+        case type.ADD:
+            let newlist =[...list];
+            let newTodo=addNewTodoHandler(action.value,newlist.length,color);
+            newlist = [...list,newTodo];
+            return{
+                ...state,
+                list:newlist,
+                color
+            };
+        case type.REMOVE:
+            newlist = [...list];
+            let modifiedList = todoRemoveHandler(action.value,newlist);
+            return{
+                ...state,
+                list:modifiedList,
+                color
+            };
+        case type.CHANGE_DONE:
+            newlist = [...list];
+            modifiedList=todoStateHanlder(action.value,newlist);
+            return{
+                ...state,
+                list:modifiedList,
+                color
+            };
+        case type.CHANGE_COLOR:
+            return{
+                ...state,
+                list,
+                color:action.value
+            };
+        default:
+            return state;
+    }
+}
 
 const StyleTodo= styled.div`
     background:#ccff99;
@@ -12,10 +87,7 @@ const StyleTodo= styled.div`
 `
 
 export const ToDoContext = createContext({
-    addNewTodoHandler:()=>{},
-    todoStateHanlder:()=>{},
-    todoRemoveHandler:()=>{},
-    colorHanlder:()=>{},
+    dispatch:()=>{},
     selectedColor:'black'
 })
 
@@ -25,45 +97,10 @@ const TodoList =()=>{
     // 투두 등록할 때마다 배열에 새로운 투두가 등록된다.
     // state는 배열 속 객체형태 {contents:'dfdf', done:t/f}
 
-    const [ list, setList ]=useState([]);
-    const [color, setColor]=useState('black');
+    const [state, dispatch]= useReducer(reducer,initalState);
+    const {list, color}=state;
 
-    const addNewTodoHandler=(e)=>{ // 새로운 투두 등록하기 핸들러 
-        e.preventDefault();
-        const contents=e.target.todo.value;
-        if(contents.length===0) return;
-        e.target.todo.value='';
-        const newTodo={key:'',contents:contents,done:false,color:color};
-        setList((prevList)=>{
-            newTodo.key=contents+prevList.length;
-            return [...prevList, newTodo]});
-    }
-
-    const todoStateHanlder=(e)=>{ // 투두 체크 핸들러 
-        // 선택된 투두의 key값을 이용하여 done 을 바꾸어준다.
-        const key=e.target.id;
-        setList((prevList)=>{
-            const modifiedList=[...prevList];
-            const idx= modifiedList.findIndex(x=>x.key===key);
-            if(idx>=0){
-                modifiedList[idx].done=!modifiedList[idx].done;
-            }
-            return modifiedList;
-        })
-    }
-
-    const colorHanlder=(e)=>{
-        setColor(e.target.id);
-    }
-
-    const todoRemoveHandler=(e)=>{ // 투두 삭제 핸들러 
-        const key = e.target.id;
-        setList((prevList)=>{
-            const modifiedList=prevList.filter((v)=>v.key!==key);
-            return modifiedList;
-        })
-    }
-    const value = useMemo(() => ({addNewTodoHandler, todoStateHanlder, todoRemoveHandler, colorHanlder,selectedColor:color}), [color]); // memo로 캐싱해주기 
+    const value = useMemo(() => ({dispatch,selectedColor:color}), [color]); // memo로 캐싱해주기 
     return(
 
         <StyleTodo>

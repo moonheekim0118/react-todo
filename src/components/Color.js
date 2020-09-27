@@ -1,6 +1,7 @@
 import React , {useContext,memo}from 'react';
 import styled from 'styled-components';
 import {ToDoContext} from './TodoList';
+import { CHANGE_COLOR } from '../action/actionTypes';
 
 const StyleColorBox=styled.div`
     margin-left:20px;
@@ -24,8 +25,12 @@ const StyleColorBox=styled.div`
 `;
 
 const Color =({color})=>{
-    const { colorHanlder , selectedColor} = useContext(ToDoContext);
-    console.log(selectedColor===color );
+    const { dispatch , selectedColor} = useContext(ToDoContext);
+
+    const colorHanlder=(e)=>{
+        dispatch({type:CHANGE_COLOR, value:e.target.id});
+    }
+
     return(
         <StyleColorBox alt={color} id={color} className={selectedColor===color ? 'active': ''} onClick={colorHanlder}/>
     );
